@@ -540,7 +540,10 @@ main .btn-send:hover {
 
 
 
-
+.moviePoster{
+    width: 230px;
+    height: 350px;
+}
 
 
 @media screen and (max-width: 768px) {
