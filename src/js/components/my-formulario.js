@@ -1,5 +1,5 @@
 import { LitElement, html, css } from "lit"
-import { getMovieByName } from "../modules/api"
+import { getMovieByName} from "../modules/api"
 
 export class MyFormulario extends LitElement{
 
@@ -88,6 +88,8 @@ export class MyFormulario extends LitElement{
             <li><a href="#" @click="${this._filtroRango}">Filtrar rango de IMDb</a></li>
             <li class="divider">/</li>
             <li><a href="#" @click="${this._tomarTodas}">Titulos y ids de todas las peliculas</a></li>
+            <li class="divider">/</li>
+            <li><a href="#" @click="${this._tomarTodasOrdenadas}">Titulos y ids de todas las peliculas ordenado por año</a></li>
         </ul>
         `
     }
@@ -96,24 +98,64 @@ export class MyFormulario extends LitElement{
         this.nombre = e.srcElement.value
     }
 
-    async _tomarTodas(){
-        alert("Es posible que demore un poco en cargar")
+    async _tomarTodasOrdenadas(){
+        alert("Es posible que demore un poco en cargar, son 217 datos")
         let contenedor = document.querySelector(".info-data")
         contenedor.innerHTML = ""
         let arr = ['a','b','c','d','e','f','g','h','i','j','k','l', 'ñ','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
-        let arr2 = ['aa','bb','cc','dd','ee','ff','gg','hh','ii','jj','kk','ll', 'ñh','mm','nn','oo','pp','qq','rr','ss','tt','uu','vv','ww','xx','yy','zz']
         let data
         for(let i = 0; i < arr.length; i++){
             let letra = arr[i]
             let newData = await getMovieByName(letra)
             data = newData.concat(data)
+            console.log(newData)
         }
+        let añoPublico = "#YEAR"
+        data.sort((a, b) => b[añoPublico] + a[añoPublico])
 
+        data.forEach(pelicula => {
+            let nombrePublico = "#TITLE"
+            let añoPublico = "#YEAR"
+            let actorPublico = "#ACTORS"
+            let imgPublico = "#IMG_POSTER"
+            let rankPublico = "#RANK"
+            let idPublico = "#IMDB_ID"
+            contenedor.innerHTML += `
+            <div class="card">
+                <div class="head">
+                    <div class="dataPelicula">
+                        <h2>${pelicula[nombrePublico]}</h2>
+                        <p><b>Año: </b>${pelicula[añoPublico]}</p>
+                        <p><b>Actores: </b>${pelicula[actorPublico]}</p>
+                        <p><b>Rango: </b>${pelicula[rankPublico]}</p>
+                        <p><b>ID: ${pelicula[idPublico]}</b></p>
+                    </div>
+                </div>
+                <img class="moviePoster" src="${pelicula[imgPublico]}">
+            </div>
+            `
+        });
+        
+    }
+
+    async _tomarTodas(){
+        alert("Es posible que demore un poco en cargar, son 217 datos")
+        let contenedor = document.querySelector(".info-data")
+        contenedor.innerHTML = ""
+        let arr = ['a','b','c','d','e','f','g','h','i','j','k','l', 'ñ','m','n','o','p','q','r','s','t','u','v','w','x','y','z']
+        let data
+        for(let i = 0; i < arr.length; i++){
+            let letra = arr[i]
+            let newData = await getMovieByName(letra)
+            data = newData.concat(data)
+            console.log(newData)
+        }
         // for(let i = 0; i < arr2.length; i++){
         //     let letra = arr2[i]
         //     let newData = await getMovieByName(letra)
         //     data = newData.concat(data)
         // }
+
 
         // console.log(data)
 
